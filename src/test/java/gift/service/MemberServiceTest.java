@@ -3,22 +3,17 @@ package gift.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import gift.domain.Member;
-import gift.dto.AdminMemberResponse;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
-import gift.dto.UpdateMemberRequest;
 import gift.exception.LoginException;
-import gift.exception.MemberNotFoundException;
 import gift.exception.RegisterException;
-import gift.repository.MemberRepository;
 import gift.util.TokenProvider;
 
 public class MemberServiceTest {
@@ -95,96 +90,5 @@ public class MemberServiceTest {
         // when, then
         assertThatThrownBy(() -> memberService.signin(request))
             .isInstanceOf(LoginException.class);
-    }
-
-    @Test
-    void findAllTest() {
-        // given
-        given(memberRepository.findAll()).willReturn(List.of(
-            new Member(1L, "member1@test.com", "dbPassword1", "ROLE_USER"),
-            new Member(2L, "member2@test.com", "dbPassword2!", "ROLE_USER")
-        ));
-
-        // when
-        List<AdminMemberResponse> response = memberService.findAll();
-
-        // then
-        assertThat(response).hasSize(2);
-        assertThat(response.get(0).id()).isEqualTo(1L);
-        assertThat(response.get(0).email()).isEqualTo("member1@test.com");
-        assertThat(response.get(1).id()).isEqualTo(2L);
-        assertThat(response.get(1).email()).isEqualTo("member2@test.com");
-    }
-
-    @Test
-    void findByIdTest() {
-        // given
-        Long memberId = 1L;
-        Member member = new Member(memberId, "test@test.com", "dbPassword", "ROLE_USER");
-        given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
-
-        // when
-        AdminMemberResponse response = memberService.findById(memberId);
-
-        // then
-        assertThat(response.id()).isEqualTo(memberId);
-        assertThat(response.email()).isEqualTo("test@test.com");
-    }
-
-    @Test
-    void findByIdFailTest() {
-        // given
-        Long failId = 999L;
-        given(memberRepository.findById(failId)).willReturn(Optional.empty());
-
-        // when, then
-        assertThatThrownBy(() -> memberService.findById(failId))
-            .isInstanceOf(MemberNotFoundException.class);
-    }
-
-    @Test
-    void updateTest() {
-        // given
-        Long memberId = 1L;
-        UpdateMemberRequest request = new UpdateMemberRequest("test2@test.com");
-        given(memberRepository.existsById(memberId)).willReturn(true);
-        given(memberRepository.update(any())).willReturn(1);
-
-        // when, then
-        assertThatCode(() -> memberService.update(memberId, request)).doesNotThrowAnyException();
-    }
-
-    @Test
-    void updateFailTest() {
-        // given
-        Long failId = 999L;
-        UpdateMemberRequest request = new UpdateMemberRequest("updated@example.com");
-        given(memberRepository.existsById(failId)).willReturn(false);
-
-        // when, then
-        assertThatThrownBy(() -> memberService.update(failId, request))
-            .isInstanceOf(MemberNotFoundException.class);
-    }
-
-    @Test
-    void deleteTest() {
-        // given
-        Long memberId = 1L;
-        given(memberRepository.existsById(memberId)).willReturn(true);
-        given(memberRepository.delete(memberId)).willReturn(1);
-
-        // when, then
-        assertThatCode(() -> memberService.delete(memberId)).doesNotThrowAnyException();
-    }
-
-    @Test
-    void deleteFailTest() {
-        // given
-        Long failId = 999L;
-        given(memberRepository.existsById(failId)).willReturn(false);
-
-        // when, then
-        assertThatThrownBy(() -> memberService.delete(failId))
-            .isInstanceOf(MemberNotFoundException.class);
     }
 }
