@@ -5,32 +5,37 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import gift.domain.Member;
 import gift.domain.Product;
+import gift.domain.Wish;
 import gift.dto.AddWishlistRequest;
 import gift.dto.WishResponse;
+import gift.exception.MemberNotFoundException;
 import gift.exception.ProductNotFoundException;
-import gift.exception.WishlistAddException;
-import gift.exception.WishlistDeleteException;
+import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
-import gift.repository.WishlistRepository;
+import gift.repository.WishRepository;
 
 @Service
-public class WishlistService {
+public class WishService {
 
-    private final WishlistRepository wishlistRepository;
+    private final WishRepository wishRepository;
     private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishlistService(
-        WishlistRepository wishlistRepository,
-        ProductRepository productRepository
+    public WishService(
+        WishRepository wishRepository,
+        ProductRepository productRepository,
+        MemberRepository memberRepository
     ) {
-        this.wishlistRepository = wishlistRepository;
+        this.wishRepository = wishRepository;
         this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional(readOnly = true)
     public List<WishResponse> getProductsFromWishlist(Long memberId) {
-        return wishlistRepository.findAllProductByWishlistId(memberId)
+        return wishRepository.findAllProductByMemberId(memberId)
             .stream()
             .map(WishResponse::from)
             .toList();
@@ -41,12 +46,11 @@ public class WishlistService {
         Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
 
-        int count = wishlistRepository.addProductToWishlist(memberId, request.productId());
-        if (count != 1) {
-            throw new WishlistAddException("위시리스트 상품 추가를 실패했습니다.");
-        }
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
 
-        // return ProductResponse.from(product);
+        wishRepository.save(new Wish(member, product));
+
         return new WishResponse(
             product.getId(),
             product.getPrice(),
@@ -58,9 +62,6 @@ public class WishlistService {
 
     @Transactional
     public void deleteProductFromWishlist(Long memberId, Long productId) {
-        int count = wishlistRepository.deleteProductFromWishlist(memberId, productId);
-        if (count != 1) {
-            throw new WishlistDeleteException("위시리스트 상품 삭제를 실패했습니다.");
-        }
+        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
     }
 }

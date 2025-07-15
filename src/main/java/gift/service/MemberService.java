@@ -10,6 +10,7 @@ import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
 import gift.exception.LoginException;
 import gift.exception.RegisterException;
+import gift.repository.MemberRepository;
 import gift.util.TokenProvider;
 
 @Service
@@ -36,13 +37,10 @@ public class MemberService {
             throw new RegisterException("이미 가입된 이메일입니다.");
         }
 
-        Long generatedId = memberRepository.save(Member.createMemberWithEmailAndPassword(
+        Member member = memberRepository.save(new Member(
             request.email(),
             passwordEncoder.encode(request.password()))
         );
-
-        Member member = memberRepository.findById(generatedId)
-            .orElseThrow(() -> new RegisterException("사용자 생성에 실패했습니다."));
 
         return new LoginResponse(PREFIX + tokenProvider.createToken(member));
     }

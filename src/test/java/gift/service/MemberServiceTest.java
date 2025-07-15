@@ -14,6 +14,7 @@ import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
 import gift.exception.LoginException;
 import gift.exception.RegisterException;
+import gift.repository.MemberRepository;
 import gift.util.TokenProvider;
 
 public class MemberServiceTest {
@@ -36,7 +37,7 @@ public class MemberServiceTest {
         String token = "validJwt";
         given(passwordEncoder.encode("1234123!")).willReturn("dbPassword");
         given(memberRepository.existsByEmail("test@test.com")).willReturn(false);
-        given(memberRepository.save(any())).willReturn(1L);
+        given(memberRepository.save(any())).willReturn(savedMember);
         given(memberRepository.findById(1L)).willReturn(Optional.of(savedMember));
         given(tokenProvider.createToken(savedMember)).willReturn(token);
 
@@ -62,7 +63,7 @@ public class MemberServiceTest {
     void signinTest() {
         // given
         LoginRequest request = new LoginRequest("test@test.com", "1234123!");
-        Member member = Member.createMemberWithEmailAndPassword(
+        Member member = new Member(
             "test@test.com", "dbPassword"
         );
         String token = "validJwt";
@@ -81,7 +82,7 @@ public class MemberServiceTest {
     void signinFailTest() {
         // given
         LoginRequest request = new LoginRequest("test@test.com", "wrongPassword");
-        Member member = Member.createMemberWithEmailAndPassword(
+        Member member = new Member(
             "test@test.com", "dbPassword"
         );
         given(memberRepository.findByEmail("test@test.com")).willReturn(Optional.of(member));

@@ -1,7 +1,5 @@
 package gift.dto;
 
-import gift.domain.WishItem;
-
 public record WishResponse(
     Long productId,
     Long price,
@@ -11,11 +9,11 @@ public record WishResponse(
 ) {
     public static WishResponse from(WishItem item) {
         return new WishResponse(
-            item.getProductId(),
-            item.getPrice(),
-            item.getName(),
-            item.getImageUrl(),
-            item.getQuantity()
+            item.productId(),
+            item.price(),
+            item.name(),
+            item.imageUrl(),
+            item.quantity()
         );
     }
 }

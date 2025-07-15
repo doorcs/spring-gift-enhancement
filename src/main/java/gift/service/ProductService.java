@@ -12,10 +12,7 @@ import gift.dto.ProductResponse;
 import gift.dto.UpdateProductRequest;
 import gift.dto.UpdateProductResponse;
 import gift.exception.ApprovalRequiredException;
-import gift.exception.ProductCreateException;
-import gift.exception.ProductDeleteException;
 import gift.exception.ProductNotFoundException;
-import gift.exception.ProductUpdateException;
 import gift.repository.ProductRepository;
 
 @Service
@@ -46,13 +43,10 @@ public class ProductService {
     public CreateProductResponse createProduct(CreateProductRequest request) {
         validateProductName(request.name());
 
-        Product product = Product.of(request.name(), request.price(), request.imageUrl());
+        Product product = productRepository.save(
+            new Product(request.name(), request.price(), request.imageUrl()));
 
-        Long generatedId = productRepository.save(product);
-
-        return CreateProductResponse.from(
-            productRepository.findById(generatedId)
-                .orElseThrow(() -> new ProductCreateException("상품 생성을 실패했습니다.")));
+        return CreateProductResponse.from(product);
     }
 
     @Transactional
@@ -60,12 +54,9 @@ public class ProductService {
         checkProductExistence(id);
         validateProductName(request.name());
 
-        Product newProduct = Product.of(id, request.name(), request.price(), request.imageUrl());
-
-        int count = productRepository.update(newProduct);
-        if (count != 1) {
-            throw new ProductUpdateException("상품 수정을 실패했습니다.");
-        }
+        Product newProduct = productRepository.save(
+            new Product(id, request.name(), request.price(), request.imageUrl())
+        );
 
         return UpdateProductResponse.from(newProduct);
     }
@@ -74,10 +65,7 @@ public class ProductService {
     public void deleteProduct(Long id) {
         checkProductExistence(id);
 
-        int count = productRepository.delete(id);
-        if (count != 1) {
-            throw new ProductDeleteException("상품 삭제를 실패했습니다.");
-        }
+        productRepository.deleteById(id);
     }
 
     private void validateProductName(String productName) {
