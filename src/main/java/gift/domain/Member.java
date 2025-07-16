@@ -1,25 +1,41 @@
 package gift.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "member")
 public class Member {
 
-    private final Long id;
-    private final String email;
-    private final String password;
-    private final String role;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "role", nullable = false)
+    private String role;
+
+    protected Member() {}
+
+    public Member(String email, String password) {
+        this(null, email, password, "ROLE_USER");
+    }
 
     public Member(Long id, String email, String password, String role) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
-    }
-
-    public static Member createMemberWithEmailAndPassword(String email, String password) {
-        return new Member(null, email, password, "ROLE_USER");
-    }
-
-    public static Member createMemberForUpdate(Long id, String email) {
-        return new Member(id, email, null, null);
     }
 
     public Long getId() {

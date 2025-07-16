@@ -15,23 +15,23 @@ import org.springframework.web.bind.annotation.RestController;
 import gift.dto.AddWishlistRequest;
 import gift.dto.WishResponse;
 import gift.resolver.LoginMemberId;
-import gift.service.WishlistService;
+import gift.service.WishService;
 
 @RestController
 @RequestMapping("/api")
-public class WishlistController {
+public class WishController {
 
-    private final WishlistService wishlistService;
+    private final WishService wishService;
 
-    public WishlistController(WishlistService wishService) {
-        this.wishlistService = wishService;
+    public WishController(WishService wishService) {
+        this.wishService = wishService;
     }
 
     @GetMapping("/wishes")
     public ResponseEntity<List<WishResponse>> getProductsFromWishlist(
         @LoginMemberId Long memberId
     ) {
-        List<WishResponse> products = wishlistService.getProductsFromWishlist(memberId);
+        List<WishResponse> products = wishService.getProductsFromWishlist(memberId);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
@@ -40,7 +40,7 @@ public class WishlistController {
         @LoginMemberId Long memberId,
         @RequestBody AddWishlistRequest request
     ) {
-        WishResponse response = wishlistService.addProductToWishlist(memberId, request);
+        WishResponse response = wishService.addProductToWishlist(memberId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -49,7 +49,7 @@ public class WishlistController {
         @LoginMemberId Long memberId,
         @PathVariable Long productId
     ) {
-        wishlistService.deleteProductFromWishlist(memberId, productId);
+        wishService.deleteProductFromWishlist(memberId, productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -26,8 +26,8 @@ class ProductServiceTest {
     void getAllProductsTest() {
         // given
         given(productRepository.findAll()).willReturn(List.of(
-            Product.of(1L, "상품1", 1000L, "image1"),
-            Product.of(2L, "상품2", 2000L, "image2")
+            new Product(1L, "상품1", 1000L, "image1"),
+            new Product(2L, "상품2", 2000L, "image2")
         ));
 
         // when
@@ -50,7 +50,7 @@ class ProductServiceTest {
         // given
         Long productId = 1L;
         given(productRepository.findById(productId)).willReturn(Optional.of(
-            Product.of(productId, "상품1", 1000L, "image")
+            new Product(productId, "상품1", 1000L, "image")
         ));
 
         // when
@@ -78,8 +78,8 @@ class ProductServiceTest {
     void createProductTest() {
         // given
         CreateProductRequest request = new CreateProductRequest("상품1", 1000L, "image");
-        Product saved = Product.of(1L, "상품1", 1000L, "image");
-        given(productRepository.save(any())).willReturn(1L);
+        Product saved = new Product(1L, "상품1", 1000L, "image");
+        given(productRepository.save(any())).willReturn(saved);
         given(productRepository.findById(1L)).willReturn(Optional.of(saved));
 
         // when
