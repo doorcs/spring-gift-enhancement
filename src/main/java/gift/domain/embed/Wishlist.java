@@ -12,7 +12,7 @@ import gift.domain.Wish;
 @Embeddable
 public class Wishlist {
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
     public Wishlist() {
@@ -24,6 +24,6 @@ public class Wishlist {
     }
 
     public void remove(Wish wish) {
-        this.wishes.remove(wish);
+        this.wishes.removeIf(elem -> elem.getProduct().getId().equals(wish.getProduct().getId()));
     }
 }
