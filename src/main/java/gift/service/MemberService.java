@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import gift.domain.Email;
 import gift.domain.Member;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
@@ -33,7 +34,7 @@ public class MemberService {
 
     @Transactional
     public LoginResponse signup(RegisterRequest request) {
-        if (memberRepository.existsByEmail(request.email())) {
+        if (memberRepository.existsByEmail(new Email(request.email()))) {
             throw new RegisterException("이미 가입된 이메일입니다.");
         }
 
@@ -47,7 +48,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public LoginResponse signin(LoginRequest request) {
-        Member member = memberRepository.findByEmail(request.email())
+        Member member = memberRepository.findByEmail(new Email(request.email()))
             .orElseThrow(() -> new LoginException("사용자를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(request.password(), member.getPassword())) {
