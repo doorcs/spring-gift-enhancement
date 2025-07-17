@@ -2,6 +2,7 @@ package gift.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,8 +35,8 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse> getProductsFromWishlist(Long memberId) {
-        return wishRepository.findAllProductByMemberId(memberId)
+    public List<WishResponse> getProductsFromWishlist(Long memberId, Pageable pageable) {
+        return wishRepository.findAllProductByMemberId(memberId, pageable)
             .stream()
             .map(WishResponse::from)
             .toList();

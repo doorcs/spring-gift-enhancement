@@ -2,6 +2,7 @@ package gift.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +20,7 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
         JOIN w.product AS p
         WHERE w.member.id = :memberId
         """)
-    List<WishItem> findAllProductByMemberId(Long memberId);
+    List<WishItem> findAllProductByMemberId(Long memberId, Pageable pageable);
 
     @Modifying
     @Query("DELETE FROM Wish AS w WHERE w.member.id = :memberId AND w.product.id = :productId")
