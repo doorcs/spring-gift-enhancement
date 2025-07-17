@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import gift.domain.Product;
 import gift.dto.CreateProductRequest;
@@ -25,13 +28,17 @@ class ProductServiceTest {
     @Test
     void getAllProductsTest() {
         // given
-        given(productRepository.findAll()).willReturn(List.of(
+        Pageable pageable = PageRequest.of(0, 2);
+        List<Product> products = List.of(
             new Product(1L, "상품1", 1000L, "image1"),
             new Product(2L, "상품2", 2000L, "image2")
-        ));
+        );
+        given(productRepository.findAll(pageable)).willReturn(
+            new PageImpl<>(products, pageable, products.size())
+        );
 
         // when
-        List<ProductResponse> response = productService.getAllProducts();
+        List<ProductResponse> response = productService.getAllProducts(pageable);
 
         // then
         assertThat(response).hasSize(2);

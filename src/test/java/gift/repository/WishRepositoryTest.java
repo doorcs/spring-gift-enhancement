@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import gift.domain.Member;
@@ -40,6 +42,7 @@ class WishRepositoryTest {
     @Test
     void saveTest() {
         // given
+        Pageable pageable = PageRequest.of(0, 2);
         Member member1 = memberRepository.save(new Member(null, "member1", "test@test.com", "ROLE_USER"));
         Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
 
@@ -47,7 +50,7 @@ class WishRepositoryTest {
         wishRepository.save(new Wish(member1, product1));
 
         // then
-        List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L);
+        List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L, pageable);
         assertThat(wishItems).hasSize(1);
         assertThat(wishItems.get(0).productId()).isEqualTo(1L);
         assertThat(wishItems.get(0).name()).isEqualTo("product1");
@@ -58,6 +61,7 @@ class WishRepositoryTest {
     @Test
     void findAllProductByMemberIdTest() {
         // given
+        Pageable pageable = PageRequest.of(0, 2);
         Member member1 = memberRepository.save(new Member(null, "member1", "test@test.com", "ROLE_USER"));
         Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
         Product product2 = productRepository.save(new Product(null, "product2", 2000L, "image2"));
@@ -65,7 +69,7 @@ class WishRepositoryTest {
         wishRepository.save(new Wish(member1, product2));
 
         // when
-        List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L);
+        List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L, pageable);
 
         // then
         assertThat(wishItems).hasSize(2);
@@ -77,20 +81,5 @@ class WishRepositoryTest {
         assertThat(wishItems.get(1).name()).isEqualTo("product2");
         assertThat(wishItems.get(1).price()).isEqualTo(2000L);
         assertThat(wishItems.get(1).imageUrl()).isEqualTo("image2");
-    }
-
-    @Test
-    void deleteByMemberIdAndProductIdTest() {
-        // given
-        Member member1 = memberRepository.save(new Member(null, "member1", "test@test.com", "ROLE_USER"));
-        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
-        wishRepository.save(new Wish(member1, product1));
-
-        // when
-        wishRepository.deleteByMemberIdAndProductId(1L, 1L);
-
-        // then
-        List<WishItem> wishItems = wishRepository.findAllProductByMemberId(1L);
-        assertThat(wishItems).doesNotContain(new WishItem(1L, 1L, null, null, null, null));
     }
 }

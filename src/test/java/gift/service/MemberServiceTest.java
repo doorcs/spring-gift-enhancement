@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import gift.domain.Member;
+import gift.domain.embed.Email;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.RegisterRequest;
@@ -36,7 +37,7 @@ public class MemberServiceTest {
         Member savedMember = new Member(1L, "test@test.com", "dbPassword", "ROLE_USER");
         String token = "validJwt";
         given(passwordEncoder.encode("1234123!")).willReturn("dbPassword");
-        given(memberRepository.existsByEmail("test@test.com")).willReturn(false);
+        given(memberRepository.existsByEmail(new Email("test@test.com"))).willReturn(false);
         given(memberRepository.save(any())).willReturn(savedMember);
         given(memberRepository.findById(1L)).willReturn(Optional.of(savedMember));
         given(tokenProvider.createToken(savedMember)).willReturn(token);
@@ -52,7 +53,7 @@ public class MemberServiceTest {
     void signupFailTest() {
         // given
         RegisterRequest request = new RegisterRequest("test@test.com", "1234123!");
-        given(memberRepository.existsByEmail("test@test.com")).willReturn(true);
+        given(memberRepository.existsByEmail(new Email("test@test.com"))).willReturn(true);
 
         // when, then
         assertThatThrownBy(() -> memberService.signup(request))
@@ -68,7 +69,7 @@ public class MemberServiceTest {
         );
         String token = "validJwt";
         given(passwordEncoder.matches("1234123!", "dbPassword")).willReturn(true);
-        given(memberRepository.findByEmail("test@test.com")).willReturn(Optional.of(member));
+        given(memberRepository.findByEmail(new Email("test@test.com"))).willReturn(Optional.of(member));
         given(tokenProvider.createToken(member)).willReturn(token);
 
         // when
@@ -85,7 +86,7 @@ public class MemberServiceTest {
         Member member = new Member(
             "test@test.com", "dbPassword"
         );
-        given(memberRepository.findByEmail("test@test.com")).willReturn(Optional.of(member));
+        given(memberRepository.findByEmail(new Email("test@test.com"))).willReturn(Optional.of(member));
         given(passwordEncoder.matches("wrongPassword", "dbPassword")).willReturn(false);
 
         // when, then

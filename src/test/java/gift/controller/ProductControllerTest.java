@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -64,7 +66,8 @@ class ProductControllerTest {
             new ProductResponse(1L, "상품1", 1000L, "image1"),
             new ProductResponse(2L, "상품2", 2000L, "image2")
         );
-        given(productService.getAllProducts()).willReturn(products);
+        Pageable pageable = PageRequest.of(0, 2);
+        given(productService.getAllProducts(pageable)).willReturn(products);
 
         // when
         MockHttpServletResponse actual = mockMvc.perform(get("/api/products"))
