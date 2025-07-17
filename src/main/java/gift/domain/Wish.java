@@ -44,4 +44,20 @@ public class Wish {
         this.product = product;
         this.quantity = new Quantity(quantity);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
+    }
 }

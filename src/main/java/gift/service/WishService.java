@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gift.domain.Member;
 import gift.domain.Product;
-import gift.domain.Wish;
 import gift.dto.AddWishlistRequest;
 import gift.dto.WishResponse;
 import gift.exception.MemberNotFoundException;
@@ -50,7 +49,8 @@ public class WishService {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
 
-        wishRepository.save(new Wish(member, product));
+        member.addToWishlist(product);
+        memberRepository.save(member);
 
         return new WishResponse(
             product.getId(),
@@ -63,6 +63,13 @@ public class WishService {
 
     @Transactional
     public void deleteProductFromWishlist(Long memberId, Long productId) {
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
+
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberNotFoundException("해당 회원이 존재하지 않습니다."));
+
+        member.removeFromWishlist(product);
+        memberRepository.save(member);
     }
 }
