@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import gift.domain.Email;
+import gift.domain.embed.Email;
 import gift.domain.Member;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;

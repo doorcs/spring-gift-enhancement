@@ -10,6 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import gift.domain.embed.Quantity;
+
 @Entity
 @Table(name = "wish")
 public class Wish {

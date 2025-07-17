@@ -8,6 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import gift.domain.embed.Email;
+import gift.domain.embed.Password;
+import gift.domain.embed.Role;
+
 @Entity
 @Table(name = "member")
 public class Member {

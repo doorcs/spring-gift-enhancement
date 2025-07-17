@@ -8,6 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import gift.domain.embed.ImageUrl;
+import gift.domain.embed.Name;
+import gift.domain.embed.Price;
+
 @Entity
 @Table(name = "product")
 public class Product {
