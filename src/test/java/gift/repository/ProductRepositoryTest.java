@@ -36,7 +36,7 @@ public class ProductRepositoryTest {
 
         // then
         assertThat(savedProduct.getId()).isEqualTo(1L);
-        assertThat(savedProduct.getName()).isEqualTo("상품1");
+        assertThat(savedProduct.getProductName()).isEqualTo("상품1");
         assertThat(savedProduct.getPrice()).isEqualTo(1000L);
         assertThat(savedProduct.getImageUrl()).isEqualTo("image1");
     }
@@ -53,11 +53,11 @@ public class ProductRepositoryTest {
 
         // then
         assertThat(product1).isPresent();
-        assertThat(product1.get().getName()).isEqualTo("상품1");
+        assertThat(product1.get().getProductName()).isEqualTo("상품1");
         assertThat(product1.get().getPrice()).isEqualTo(1000L);
         assertThat(product1.get().getImageUrl()).isEqualTo("image1");
         assertThat(product2).isPresent();
-        assertThat(product2.get().getName()).isEqualTo("상품2");
+        assertThat(product2.get().getProductName()).isEqualTo("상품2");
         assertThat(product2.get().getPrice()).isEqualTo(2000L);
         assertThat(product2.get().getImageUrl()).isEqualTo("image2");
     }

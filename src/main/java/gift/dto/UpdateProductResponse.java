@@ -7,7 +7,7 @@ public record UpdateProductResponse(Long id, String name, Long price, String ima
     public static UpdateProductResponse from(Product product) {
         return new UpdateProductResponse(
             product.getId(),
-            product.getName(),
+            product.getProductName(),
             product.getPrice(),
             product.getImageUrl()
         );

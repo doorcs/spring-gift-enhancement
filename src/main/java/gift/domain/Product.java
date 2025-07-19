@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import gift.domain.embed.ImageUrl;
-import gift.domain.embed.Name;
+import gift.domain.embed.ProductName;
 import gift.domain.embed.Price;
 
 @Entity
@@ -22,7 +22,7 @@ public class Product {
     private Long id;
 
     @Embedded
-    private Name name;
+    private ProductName productName;
 
     @Embedded
     private Price price;
@@ -38,7 +38,7 @@ public class Product {
 
     public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
-        this.name = new Name(name);
+        this.productName = new ProductName(name);
         this.price = new Price(price);
         this.imageUrl = new ImageUrl(imageUrl);
     }
@@ -47,8 +47,8 @@ public class Product {
         return id;
     }
 
-    public String getName() {
-        return name.getName();
+    public String getProductName() {
+        return productName.getProductName();
     }
 
     public Long getPrice() {
