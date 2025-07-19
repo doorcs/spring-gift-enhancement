@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
 import gift.domain.Member;
+import gift.domain.embed.Email;
 
 @DataJpaTest
 public class MemberRepositoryTest {
@@ -46,7 +47,7 @@ public class MemberRepositoryTest {
         memberRepository.save(new Member("test@test.com", "dbPassword"));
 
         // when
-        Optional<Member> member = memberRepository.findByEmail("test@test.com");
+        Optional<Member> member = memberRepository.findByEmail(new Email("test@test.com"));
 
         // then
         assertThat(member.get().getId()).isEqualTo(1L);
@@ -60,7 +61,7 @@ public class MemberRepositoryTest {
         memberRepository.save(new Member("test@test.com", "dbPassword"));
 
         // when
-        Optional<Member> member = memberRepository.findByEmail("test2@test.com");
+        Optional<Member> member = memberRepository.findByEmail(new Email("test2@test.com"));
 
         // then
         assertThat(member).isEmpty();

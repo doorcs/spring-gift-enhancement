@@ -2,6 +2,8 @@ package gift.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +31,10 @@ public class WishController {
 
     @GetMapping("/wishes")
     public ResponseEntity<List<WishResponse>> getProductsFromWishlist(
-        @LoginMemberId Long memberId
+        @LoginMemberId Long memberId,
+        @PageableDefault(size = 2) Pageable pageable
     ) {
-        List<WishResponse> products = wishService.getProductsFromWishlist(memberId);
+        List<WishResponse> products = wishService.getProductsFromWishlist(memberId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 

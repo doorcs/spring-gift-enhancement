@@ -1,11 +1,16 @@
 package gift.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import gift.domain.embed.ImageUrl;
+import gift.domain.embed.Name;
+import gift.domain.embed.Price;
 
 @Entity
 @Table(name = "product")
@@ -16,14 +21,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Embedded
+    private Name name;
 
-    @Column(name = "price", nullable = false)
-    private Long price;
+    @Embedded
+    private Price price;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Embedded
+    private ImageUrl imageUrl;
 
     protected Product() {}
 
@@ -33,9 +38,9 @@ public class Product {
 
     public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.name = new Name(name);
+        this.price = new Price(price);
+        this.imageUrl = new ImageUrl(imageUrl);
     }
 
     public Long getId() {
@@ -43,14 +48,14 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return name.getName();
     }
 
     public Long getPrice() {
-        return price;
+        return price.getPrice();
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageUrl.getImageUrl();
     }
 }

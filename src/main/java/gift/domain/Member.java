@@ -1,11 +1,17 @@
 package gift.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import gift.domain.embed.Email;
+import gift.domain.embed.Password;
+import gift.domain.embed.Role;
+import gift.domain.embed.Wishlist;
 
 @Entity
 @Table(name = "member")
@@ -16,14 +22,17 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Embedded
+    private Email email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Embedded
+    private Password password;
 
-    @Column(name = "role", nullable = false)
-    private String role;
+    @Embedded
+    private Role role;
+
+    @Embedded
+    private Wishlist wishlist;
 
     protected Member() {}
 
@@ -33,9 +42,22 @@ public class Member {
 
     public Member(Long id, String email, String password, String role) {
         this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
+        this.email = new Email(email);
+        this.password = new Password(password);
+        this.role = new Role(role);
+        this.wishlist = new Wishlist();
+    }
+
+    public void addToWishlist(Product product) {
+        this.wishlist.add(
+            new Wish(this, product)
+        );
+    }
+
+    public void removeFromWishlist(Product product) {
+        this.wishlist.remove(
+            new Wish(this, product)
+        );
     }
 
     public Long getId() {
@@ -43,14 +65,14 @@ public class Member {
     }
 
     public String getEmail() {
-        return email;
+        return this.email.getEmail();
     }
 
     public String getPassword() {
-        return password;
+        return this.password.getPassword();
     }
 
     public String getRole() {
-        return role;
+        return this.role.getRole();
     }
 }

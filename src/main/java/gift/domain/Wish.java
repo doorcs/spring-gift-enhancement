@@ -1,6 +1,7 @@
 package gift.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
+import gift.domain.embed.Quantity;
 
 @Entity
 @Table(name = "wish")
@@ -26,8 +29,8 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "quantity", nullable = false)
-    private Long quantity;
+    @Embedded
+    private Quantity quantity;
 
     protected Wish() {}
 
@@ -39,6 +42,22 @@ public class Wish {
         this.id = id;
         this.member = member;
         this.product = product;
-        this.quantity = quantity;
+        this.quantity = new Quantity(quantity);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
     }
 }
