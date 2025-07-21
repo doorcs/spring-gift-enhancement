@@ -23,6 +23,11 @@ public class Wishlist {
     }
 
     public void add(Wish wish) {
+        if (wishes.stream()
+            .anyMatch(elem -> elem.getProduct().getId().equals(wish.getProduct().getId()))) {
+            throw new IllegalArgumentException("동일한 상품이 이미 위시리스트에 존재합니다.");
+        }
+
         this.wishes.add(wish);
     }
 

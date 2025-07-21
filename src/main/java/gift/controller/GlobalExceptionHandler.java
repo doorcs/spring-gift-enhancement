@@ -48,6 +48,11 @@ public class GlobalExceptionHandler {
         return error;
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ProblemDetail handleIllegalArgumentException(IllegalArgumentException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
     @ExceptionHandler(RegisterException.class)
     public ProblemDetail handleSignupException(RegisterException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());

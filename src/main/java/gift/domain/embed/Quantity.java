@@ -12,6 +12,10 @@ public class Quantity {
     protected Quantity() {}
 
     public Quantity(Long quantity) {
+        if (quantity == null || quantity < 0) {
+            throw new IllegalArgumentException("상품 수량이 입력되지 않았습니다.");
+        }
+
         this.quantity = quantity;
     }
 

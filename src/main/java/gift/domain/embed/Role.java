@@ -3,6 +3,8 @@ package gift.domain.embed;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import org.springframework.util.StringUtils;
+
 @Embeddable
 public class Role {
 
@@ -12,6 +14,10 @@ public class Role {
     protected Role() {}
 
     public Role(String role) {
+        if (!StringUtils.hasText(role)) {
+            throw new IllegalArgumentException("역할이 입력되지 않았습니다.");
+        }
+
         this.role = role;
     }
 
