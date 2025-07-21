@@ -18,15 +18,18 @@ import gift.dto.UpdateProductRequest;
 import gift.dto.UpdateProductResponse;
 import gift.exception.ApprovalRequiredException;
 import gift.exception.ProductNotFoundException;
+import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, OptionRepository optionRepository) {
         this.productRepository = productRepository;
+        this.optionRepository = optionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -75,10 +78,6 @@ public class ProductService {
         }
         product.addAll(convertToOptionlist(request.options(), product));
 
-        // Product newProduct = productRepository.save(
-        //     new Product(id, request.name(), request.price(), request.imageUrl(), options)
-        // );
-
         return UpdateProductResponse.from(product);
     }
 
@@ -98,6 +97,15 @@ public class ProductService {
             .stream()
             .map(OptionResponse::from)
             .toList();
+    }
+
+    @Transactional
+    public void subOptionCount(Long optionId, Long quantity) {
+        Option option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new ProductNotFoundException("해당 옵션이 존재하지 않습니다."));
+
+        option.subQuantity(quantity);
+        optionRepository.save(option);
     }
 
     private void validateProductName(String productName) {

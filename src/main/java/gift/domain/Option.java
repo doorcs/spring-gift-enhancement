@@ -43,6 +43,14 @@ public class Option {
         this.quantity = new Quantity(quantity);
     }
 
+    public void subQuantity(Long quantity) {
+        if (quantity < 0 || this.quantity.getQuantity() < quantity) {
+            throw new IllegalArgumentException("옵션 수량을 확인해주세요.");
+        }
+
+        this.quantity = new Quantity(this.quantity.getQuantity() - quantity);
+    }
+
     public Long getId() {
         return id;
     }
