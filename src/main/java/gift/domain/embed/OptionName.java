@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 @Embeddable
 public class OptionName {
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "option_name", nullable = false)
     private String optionName;
 
     protected OptionName() {}

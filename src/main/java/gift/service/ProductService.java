@@ -58,6 +58,7 @@ public class ProductService {
             throw new IllegalArgumentException("반드시 하나 이상의 옵션이 있어야 합니다.");
         }
         product.addAll(convertToOptionlist(request.options(), product));
+        product = productRepository.save(product);
 
         return CreateProductResponse.from(product);
     }
@@ -77,6 +78,7 @@ public class ProductService {
             throw new IllegalArgumentException("반드시 하나 이상의 옵션이 있어야 합니다.");
         }
         product.addAll(convertToOptionlist(request.options(), product));
+        product = productRepository.save(product);
 
         return UpdateProductResponse.from(product);
     }

@@ -1,5 +1,6 @@
 package gift.controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -50,6 +51,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail handleIllegalArgumentException(IllegalArgumentException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ProblemDetail handleSQLIntegrityConstraintViolationException(
+        SQLIntegrityConstraintViolationException e
+    ) {
+        if (e.getMessage().contains("insert into option"))
+            return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "옵션명은 중복될 수 없습니다.");
+
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
