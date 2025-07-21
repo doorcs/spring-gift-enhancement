@@ -1,6 +1,7 @@
 package gift.domain.embed;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -13,10 +14,12 @@ import gift.domain.Wish;
 public class Wishlist {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishes;
+    private List<Wish> wishes = new ArrayList<>();
 
-    public Wishlist() {
-        this.wishes = new ArrayList<>();
+    public Wishlist() {}
+
+    public List<Wish> getWishlist() {
+        return Collections.unmodifiableList(new ArrayList<>(wishes));
     }
 
     public void add(Wish wish) {

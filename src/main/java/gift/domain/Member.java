@@ -1,5 +1,7 @@
 package gift.domain;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -46,6 +48,10 @@ public class Member {
         this.password = new Password(password);
         this.role = new Role(role);
         this.wishlist = new Wishlist();
+    }
+
+    public List<Wish> getWishlist() {
+        return wishlist.getWishlist();
     }
 
     public void addToWishlist(Product product) {
