@@ -12,7 +12,7 @@ public record OptionRequest(
 
     @NotNull(message = "옵션 수량이 입력되지 않았습니다.")
     @Min(value = 1, message = "옵션 수량은 1개 이상이어야 합니다.")
-    @Max(value = 100_000_000, message = "옵션 수량은 1억개 이하여야 합니다.")
+    @Max(value = 99_999_999, message = "옵션 수량은 1억개 미만이어야 합니다.")
     Long quantity
 ) {
 
