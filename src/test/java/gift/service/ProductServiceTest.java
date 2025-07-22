@@ -3,6 +3,7 @@ package gift.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,27 +12,34 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductRequest;
 import gift.dto.CreateProductResponse;
+import gift.dto.OptionRequest;
+import gift.dto.OptionResponse;
 import gift.dto.ProductResponse;
 import gift.exception.ApprovalRequiredException;
 import gift.exception.ProductNotFoundException;
+import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 
 class ProductServiceTest {
 
     private final ProductRepository productRepository = mock(ProductRepository.class);
+    private final OptionRepository optionRepository = mock(OptionRepository.class);
 
-    private final ProductService productService = new ProductService(productRepository);
+    private final ProductService productService= new ProductService(
+        productRepository, optionRepository
+    );
 
     @Test
     void getAllProductsTest() {
         // given
         Pageable pageable = PageRequest.of(0, 2);
         List<Product> products = List.of(
-            new Product(1L, "상품1", 1000L, "image1"),
-            new Product(2L, "상품2", 2000L, "image2")
+            new Product(1L, "상품1", 1000L, "image1", List.of()),
+            new Product(2L, "상품2", 2000L, "image2", List.of())
         );
         given(productRepository.findAll(pageable)).willReturn(
             new PageImpl<>(products, pageable, products.size())
@@ -57,7 +65,7 @@ class ProductServiceTest {
         // given
         Long productId = 1L;
         given(productRepository.findById(productId)).willReturn(Optional.of(
-            new Product(productId, "상품1", 1000L, "image")
+            new Product(productId, "상품1", 1000L, "image", List.of())
         ));
 
         // when
@@ -84,8 +92,8 @@ class ProductServiceTest {
     @Test
     void createProductTest() {
         // given
-        CreateProductRequest request = new CreateProductRequest("상품1", 1000L, "image");
-        Product saved = new Product(1L, "상품1", 1000L, "image");
+        CreateProductRequest request = new CreateProductRequest("상품1", 1000L, "image1", List.of(new OptionRequest("옵션1", 100L)));
+        Product saved = new Product(1L, "상품1", 1000L, "image", new ArrayList<>());
         given(productRepository.save(any())).willReturn(saved);
         given(productRepository.findById(1L)).willReturn(Optional.of(saved));
 
@@ -102,7 +110,7 @@ class ProductServiceTest {
     @Test
     void createProductFailTest() {
         // given
-        CreateProductRequest request = new CreateProductRequest("카카오닙스", 1000L, "image");
+        CreateProductRequest request = new CreateProductRequest("카카오닙스", 1000L, "image", List.of(new OptionRequest("옵션1", 100L)));
 
         // when, then
         assertThatThrownBy(() -> productService.createProduct(request))

@@ -43,8 +43,8 @@ class WishRepositoryTest {
     void saveTest() {
         // given
         Pageable pageable = PageRequest.of(0, 2);
-        Member member1 = memberRepository.save(new Member(null, "member1", "test@test.com", "ROLE_USER"));
-        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
+        Member member1 = memberRepository.save(new Member(null, "test@test.com", "dbPassword", "ROLE_USER"));
+        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1", List.of()));
 
         // when
         wishRepository.save(new Wish(member1, product1));
@@ -62,9 +62,9 @@ class WishRepositoryTest {
     void findAllProductByMemberIdTest() {
         // given
         Pageable pageable = PageRequest.of(0, 2);
-        Member member1 = memberRepository.save(new Member(null, "member1", "test@test.com", "ROLE_USER"));
-        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
-        Product product2 = productRepository.save(new Product(null, "product2", 2000L, "image2"));
+        Member member1 = memberRepository.save(new Member(null, "test@test.com", "dbPassword", "ROLE_USER"));
+        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1", List.of()));
+        Product product2 = productRepository.save(new Product(null, "product2", 2000L, "image2", List.of()));
         wishRepository.save(new Wish(member1, product1));
         wishRepository.save(new Wish(member1, product2));
 
