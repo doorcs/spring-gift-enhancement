@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gift.dto.CreateProductRequest;
 import gift.dto.CreateProductResponse;
+import gift.dto.OptionResponse;
 import gift.dto.ProductResponse;
 import gift.dto.UpdateProductRequest;
 import gift.dto.UpdateProductResponse;
@@ -69,5 +70,11 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{id}/options")
+    public ResponseEntity<List<OptionResponse>> getProductOptions(@PathVariable Long id) {
+        List<OptionResponse> options = productService.getProductOptions(id);
+        return ResponseEntity.status(HttpStatus.OK).body(options);
     }
 }

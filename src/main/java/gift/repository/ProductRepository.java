@@ -9,6 +9,4 @@ import gift.domain.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
-    Optional<Product> findById(Long id);
 }

@@ -7,7 +7,7 @@ public record ProductResponse(Long id, String name, Long price, String imageUrl)
     public static ProductResponse from(Product product) {
         return new ProductResponse(
             product.getId(),
-            product.getName(),
+            product.getProductName(),
             product.getPrice(),
             product.getImageUrl()
         );

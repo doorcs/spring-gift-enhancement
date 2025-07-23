@@ -1,28 +1,35 @@
 package gift.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import gift.domain.Option;
 import gift.domain.Product;
 import gift.dto.CreateProductRequest;
 import gift.dto.CreateProductResponse;
+import gift.dto.OptionRequest;
+import gift.dto.OptionResponse;
 import gift.dto.ProductResponse;
 import gift.dto.UpdateProductRequest;
 import gift.dto.UpdateProductResponse;
 import gift.exception.ApprovalRequiredException;
 import gift.exception.ProductNotFoundException;
+import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final OptionRepository optionRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, OptionRepository optionRepository) {
         this.productRepository = productRepository;
+        this.optionRepository = optionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -45,7 +52,13 @@ public class ProductService {
         validateProductName(request.name());
 
         Product product = productRepository.save(
-            new Product(request.name(), request.price(), request.imageUrl()));
+            new Product(request.name(), request.price(), request.imageUrl(), new ArrayList<>())
+        );
+        if (request.options().isEmpty()) {
+            throw new IllegalArgumentException("반드시 하나 이상의 옵션이 있어야 합니다.");
+        }
+        product.addAll(convertToOptionlist(request.options(), product));
+        product = productRepository.save(product);
 
         return CreateProductResponse.from(product);
     }
@@ -54,12 +67,20 @@ public class ProductService {
     public UpdateProductResponse updateProduct(Long id, UpdateProductRequest request) {
         checkProductExistence(id);
         validateProductName(request.name());
-
-        Product newProduct = productRepository.save(
-            new Product(id, request.name(), request.price(), request.imageUrl())
+        Product product = new Product(
+            id,
+            request.name(),
+            request.price(),
+            request.imageUrl(),
+            new ArrayList<>()
         );
+        if (request.options().isEmpty()) {
+            throw new IllegalArgumentException("반드시 하나 이상의 옵션이 있어야 합니다.");
+        }
+        product.addAll(convertToOptionlist(request.options(), product));
+        product = productRepository.save(product);
 
-        return UpdateProductResponse.from(newProduct);
+        return UpdateProductResponse.from(product);
     }
 
     @Transactional
@@ -67,6 +88,26 @@ public class ProductService {
         checkProductExistence(id);
 
         productRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OptionResponse> getProductOptions(Long id) {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException("해당 상품이 존재하지 않습니다."));
+
+        return product.getOptions()
+            .stream()
+            .map(OptionResponse::from)
+            .toList();
+    }
+
+    @Transactional
+    public void subOptionCount(Long optionId, Long quantity) {
+        Option option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new ProductNotFoundException("해당 옵션이 존재하지 않습니다."));
+
+        option.subQuantity(quantity);
+        optionRepository.save(option);
     }
 
     private void validateProductName(String productName) {
@@ -80,5 +121,14 @@ public class ProductService {
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException("해당 상품이 존재하지 않습니다.");
         }
+    }
+
+    private List<Option> convertToOptionlist(List<OptionRequest> options, Product product) {
+        return options.stream()
+            .map(option -> new Option(
+                product,
+                option.name(),
+                option.quantity()
+            )).toList();
     }
 }

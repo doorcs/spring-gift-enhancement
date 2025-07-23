@@ -22,8 +22,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gift.domain.Option;
+import gift.domain.Product;
 import gift.dto.CreateProductRequest;
 import gift.dto.CreateProductResponse;
+import gift.dto.OptionRequest;
+import gift.dto.OptionResponse;
 import gift.dto.ProductResponse;
 import gift.dto.UpdateProductRequest;
 import gift.dto.UpdateProductResponse;
@@ -118,8 +122,8 @@ class ProductControllerTest {
     @Test
     void createProductTest() throws Exception {
         // given
-        CreateProductRequest request = new CreateProductRequest("상품1", 1000L, "image1");
-        CreateProductResponse response = new CreateProductResponse(1L, "상품1", 1000L, "image1");
+        CreateProductRequest request = new CreateProductRequest("상품1", 1000L, "image1", List.of(new OptionRequest("옵션1", 100L)));
+        CreateProductResponse response = new CreateProductResponse(1L, "상품1", 1000L, "image1", List.of(new OptionResponse(1L, "옵션1", 100L)));
 
         given(productService.createProduct(any())).willReturn(response);
         String content = objectMapper.writeValueAsString(request);
@@ -147,9 +151,9 @@ class ProductControllerTest {
     void updateProductTest() throws Exception {
         // given
         Long productId = 1L;
-        UpdateProductRequest request = new UpdateProductRequest("상품1", 1500L, "newimage");
+        UpdateProductRequest request = new UpdateProductRequest("상품1", 1500L, "newimage", List.of(new OptionRequest("옵션1", 100L)));
         UpdateProductResponse response = new UpdateProductResponse(
-            productId, "상품1", 1500L, "newimage"
+            productId, "상품1", 1500L, "newimage", List.of(new OptionResponse(1L, "옵션1", 100L))
         );
 
         given(productService.updateProduct(any(), any())).willReturn(response);

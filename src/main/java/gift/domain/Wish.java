@@ -9,11 +9,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import gift.domain.embed.Quantity;
 
 @Entity
-@Table(name = "wish")
+@Table(name = "wish", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"member_id", "product_id"})
+})
 public class Wish {
 
     @Id

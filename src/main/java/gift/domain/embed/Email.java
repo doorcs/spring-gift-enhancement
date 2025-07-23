@@ -5,6 +5,8 @@ import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import org.springframework.util.StringUtils;
+
 @Embeddable
 public class Email {
 
@@ -14,6 +16,12 @@ public class Email {
     protected Email() {}
 
     public Email(String email) {
+        if (!StringUtils.hasText(email) || !email.matches(
+            "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$") // RFC 5322 이메일 검증 정규식!
+        ) {
+            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
+        }
+
         this.email = email;
     }
 
