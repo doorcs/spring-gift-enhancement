@@ -28,7 +28,7 @@ public class Optionlist {
 
     public void add(Option option) {
         if (options.stream()
-            .anyMatch(elem -> elem.getId().equals(option.getId()))) {
+            .anyMatch(elem -> elem.equals(option))) {
             throw new IllegalArgumentException("동일한 옵션이 이미 존재합니다.");
         }
 
@@ -36,6 +36,6 @@ public class Optionlist {
     }
 
     public void remove(Option option) {
-        options.removeIf(elem -> elem.getId().equals(option.getId()));
+        options.removeIf(elem -> elem.equals(option));
     }
 }

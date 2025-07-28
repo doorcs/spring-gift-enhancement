@@ -1,5 +1,7 @@
 package gift.domain;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -54,6 +56,23 @@ public class Option {
         }
 
         this.quantity = new Quantity(this.quantity.getQuantity() - quantity);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Option option = (Option)o;
+
+        return Objects.equals(product, option.product)
+            && Objects.equals(optionName, option.optionName)
+            && Objects.equals(quantity, option.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, optionName, quantity);
     }
 
     public Long getId() {

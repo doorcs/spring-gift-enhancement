@@ -24,7 +24,7 @@ public class Wishlist {
 
     public void add(Wish wish) {
         if (wishes.stream()
-            .anyMatch(elem -> elem.getProduct().getId().equals(wish.getProduct().getId()))) {
+            .anyMatch(elem -> elem.getProduct().equals(wish.getProduct()))) {
             throw new IllegalArgumentException("동일한 상품이 이미 위시리스트에 존재합니다.");
         }
 
@@ -32,6 +32,8 @@ public class Wishlist {
     }
 
     public void remove(Wish wish) {
-        this.wishes.removeIf(elem -> elem.getProduct().getId().equals(wish.getProduct().getId()));
+        this.wishes.removeIf(elem -> elem.getProduct()
+            .equals(wish.getProduct())
+        );
     }
 }

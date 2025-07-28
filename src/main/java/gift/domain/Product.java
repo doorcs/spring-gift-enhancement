@@ -1,6 +1,7 @@
 package gift.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -12,8 +13,8 @@ import jakarta.persistence.Table;
 
 import gift.domain.embed.ImageUrl;
 import gift.domain.embed.Optionlist;
-import gift.domain.embed.ProductName;
 import gift.domain.embed.Price;
+import gift.domain.embed.ProductName;
 
 @Entity
 @Table(name = "product")
@@ -36,7 +37,8 @@ public class Product {
     @Embedded
     private Optionlist options;
 
-    protected Product() {}
+    protected Product() {
+    }
 
     public Product(String name, Long price, String imageUrl) {
         this(null, name, price, imageUrl);
@@ -64,6 +66,24 @@ public class Product {
 
     public void remove(Option option) {
         options.remove(option);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Product product = (Product)o;
+
+        return Objects.equals(productName, product.productName)
+            && Objects.equals(price, product.price)
+            && Objects.equals(imageUrl, product.imageUrl)
+            && Objects.equals(options, product.options);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productName, price, imageUrl, options);
     }
 
     public Long getId() {
