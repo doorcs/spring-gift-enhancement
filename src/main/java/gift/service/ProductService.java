@@ -1,6 +1,5 @@
 package gift.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
@@ -51,9 +50,7 @@ public class ProductService {
     public CreateProductResponse createProduct(CreateProductRequest request) {
         validateProductName(request.name());
 
-        Product product = productRepository.save(
-            new Product(request.name(), request.price(), request.imageUrl(), new ArrayList<>())
-        );
+        Product product = new Product(request.name(), request.price(), request.imageUrl());
         if (request.options().isEmpty()) {
             throw new IllegalArgumentException("반드시 하나 이상의 옵션이 있어야 합니다.");
         }
@@ -71,8 +68,7 @@ public class ProductService {
             id,
             request.name(),
             request.price(),
-            request.imageUrl(),
-            new ArrayList<>()
+            request.imageUrl()
         );
         if (request.options().isEmpty()) {
             throw new IllegalArgumentException("반드시 하나 이상의 옵션이 있어야 합니다.");

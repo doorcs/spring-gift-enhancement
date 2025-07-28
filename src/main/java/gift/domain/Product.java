@@ -38,16 +38,16 @@ public class Product {
 
     protected Product() {}
 
-    public Product(String name, Long price, String imageUrl, List<Option> options) {
-        this(null, name, price, imageUrl, options);
+    public Product(String name, Long price, String imageUrl) {
+        this(null, name, price, imageUrl);
     }
 
-    public Product(Long id, String name, Long price, String imageUrl, List<Option> options) {
+    public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
         this.productName = new ProductName(name);
         this.price = new Price(price);
         this.imageUrl = new ImageUrl(imageUrl);
-        this.options = new Optionlist(options);
+        this.options = new Optionlist();
     }
 
     public List<Option> getOptions() {
