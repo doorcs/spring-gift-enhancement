@@ -44,7 +44,7 @@ class WishRepositoryTest {
         // given
         Pageable pageable = PageRequest.of(0, 2);
         Member member1 = memberRepository.save(new Member(null, "test@test.com", "dbPassword", "ROLE_USER"));
-        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1", List.of()));
+        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
 
         // when
         wishRepository.save(new Wish(member1, product1));
@@ -63,8 +63,8 @@ class WishRepositoryTest {
         // given
         Pageable pageable = PageRequest.of(0, 2);
         Member member1 = memberRepository.save(new Member(null, "test@test.com", "dbPassword", "ROLE_USER"));
-        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1", List.of()));
-        Product product2 = productRepository.save(new Product(null, "product2", 2000L, "image2", List.of()));
+        Product product1 = productRepository.save(new Product(null, "product1", 1000L, "image1"));
+        Product product2 = productRepository.save(new Product(null, "product2", 2000L, "image2"));
         wishRepository.save(new Wish(member1, product1));
         wishRepository.save(new Wish(member1, product2));
 

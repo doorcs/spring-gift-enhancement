@@ -17,7 +17,7 @@ class WishlistTest {
     void shouldThrowExceptionWhenAddingDuplicateProduct() {
         // given
         Member member = new Member("test@test.com", "dbPassword");
-        Product product = new Product(1L, "상품1", 1000L, "image1", new ArrayList<>());
+        Product product = new Product(1L, "상품1", 1000L, "image1");
 
         member.addToWishlist(product);
 
@@ -32,7 +32,7 @@ class WishlistTest {
     void shouldAllowReAddingAfterRemoval() {
         // given
         Member member = new Member("test@test.com", "dbPassword");
-        Product product = new Product(1L, "상품1", 1000L, "image1", new ArrayList<>());
+        Product product = new Product(1L, "상품1", 1000L, "image1");
 
         // when
         member.addToWishlist(product);

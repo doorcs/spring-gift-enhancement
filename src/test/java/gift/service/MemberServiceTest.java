@@ -64,12 +64,11 @@ public class MemberServiceTest {
     void signinTest() {
         // given
         LoginRequest request = new LoginRequest("test@test.com", "1234123!");
-        Member member = new Member(
-            "test@test.com", "dbPassword"
-        );
+        Member member = new Member("test@test.com", "dbPassword");
         String token = "validJwt";
         given(passwordEncoder.matches("1234123!", "dbPassword")).willReturn(true);
-        given(memberRepository.findByEmail(new Email("test@test.com"))).willReturn(Optional.of(member));
+        given(memberRepository.findByEmail(new Email("test@test.com"))).willReturn(
+            Optional.of(member));
         given(tokenProvider.createToken(member)).willReturn(token);
 
         // when
@@ -83,9 +82,7 @@ public class MemberServiceTest {
     void signinFailTest() {
         // given
         LoginRequest request = new LoginRequest("test@test.com", "wrongPassword");
-        Member member = new Member(
-            "test@test.com", "dbPassword"
-        );
+        Member member = new Member("test@test.com", "dbPassword");
         given(memberRepository.findByEmail(new Email("test@test.com"))).willReturn(Optional.of(member));
         given(passwordEncoder.matches("wrongPassword", "dbPassword")).willReturn(false);
 
