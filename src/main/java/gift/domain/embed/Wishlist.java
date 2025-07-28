@@ -14,7 +14,7 @@ import gift.domain.Wish;
 public class Wishlist {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishes = new ArrayList<>();
+    private final List<Wish> wishes = new ArrayList<>();
 
     public Wishlist() {}
 

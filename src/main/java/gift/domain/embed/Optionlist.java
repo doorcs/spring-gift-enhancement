@@ -14,13 +14,9 @@ import gift.domain.Option;
 public class Optionlist {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Option> options = new ArrayList<>();
+    private final List<Option> options = new ArrayList<>();
 
-    protected Optionlist() {}
-
-    public Optionlist(List<Option> options) {
-        this.options = options;
-    }
+    public Optionlist() {}
 
     public List<Option> getOptions() {
         return Collections.unmodifiableList(new ArrayList<>(options));
